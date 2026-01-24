@@ -20,10 +20,10 @@
             position: absolute;
             top: 10px;
             right: 15px;
-            font-family: 'Brush Script MT', 'Cursive', cursive; /* Letra cursiva */
+            font-family: 'Brush Script MT', 'Cursive', cursive;
             font-size: 0.9rem;
             color: #bdc3c7;
-            pointer-events: none; /* Para que no estorbe al clic */
+            pointer-events: none;
         }
 
         /* CONTACTO HEADER */
@@ -215,8 +215,10 @@
 <div id="modal-nuevo">
     <div class="modal-content">
         <h3 style="color:var(--primary)">Nuevo Consejo Regional</h3>
+        
         <label style="text-align:left">Clave Maestra:</label>
-        <input type="password" id="admin-pass" placeholder="CEGIC_2026" style="margin-bottom:15px; border-color: red;">
+        <input type="password" id="admin-pass" placeholder="Ingrese Clave Maestra" style="margin-bottom:15px; border-color: red;">
+        
         <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
         <label style="text-align:left">Nombre Consejo:</label>
         <input type="text" id="new-name" placeholder="Ej. Zona Sur" style="margin-bottom:10px">
@@ -232,15 +234,15 @@
 <script>
     // --- CONFIGURACIÓN ---
     // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT
-    const API_URL = "https://script.google.com/macros/s/AKfycbzL3BNCa3X-3bMTrST9ej6djGtfUYKQA9878c3P8JrCsIsD_Axp1UCFcOOe-IL9vob3Vw/exec";
+    const API_URL = "https://script.google.com/macros/s/TU_URL_AQUI_XXXXX/exec";
 
-    // DATOS INICIALES (Incluye teléfono de Akateko por defecto)
+    // DATOS INICIALES
     let consejos = JSON.parse(localStorage.getItem('consejos_v6')) || [
         { nombre: "Consejo Regional Akateko", pass: "cerak1", phone: "45139701" }
     ];
 
     let consejoActivo = null;
-    let consejoActivoObj = null; // Guardamos el objeto completo para tener el telefono
+    let consejoActivoObj = null; 
     let cola = JSON.parse(localStorage.getItem('cola_envios_v6')) || [];
     let historial = JSON.parse(localStorage.getItem('historial_v6')) || [];
 
@@ -265,16 +267,13 @@
         let input = prompt(`Ingrese contraseña para: ${nombre}`);
         if (input === passReal) {
             consejoActivo = nombre;
-            // Buscar objeto para sacar el telefono
             consejoActivoObj = consejos.find(c => c.nombre === nombre);
             
-            // UI Update
             document.getElementById('pantalla-inicio').style.display = 'none';
             document.getElementById('pantalla-formulario').style.display = 'block';
             document.getElementById('titulo-consejo').innerText = nombre;
             document.getElementById('nombre-tabla-local').innerText = nombre;
             
-            // Actualizar teléfono dinámico del encargado
             const linkTel = document.getElementById('link-encargado');
             let phoneNum = consejoActivoObj.phone || "Sin número";
             linkTel.innerText = `📞 ${phoneNum}`;
@@ -282,7 +281,6 @@
 
             window.scrollTo(0,0);
             
-            // Descargar y sincronizar (borra datos si se borraron en Sheets)
             descargarDatosNube();
             renderTabla(); 
         } else {
@@ -297,10 +295,9 @@
         consejoActivo = null;
     }
 
-    // --- GESTIÓN DE CONTRASEÑAS ---
     function verContrasenas() {
         let master = prompt("Ingrese la Contraseña Maestra:");
-        if (master === "Raulmartin12") {
+        if (master === "CEGIC_2026") {
             let mensaje = "CONSEJOS REGISTRADOS:\n\n";
             consejos.forEach(c => {
                 mensaje += `🏛️ ${c.nombre}\n🔑 Clave: ${c.pass}\n📞 Encargado: ${c.phone || 'N/A'}\n\n`;
@@ -321,9 +318,9 @@
         const adminPass = document.getElementById('admin-pass').value;
         const nombre = document.getElementById('new-name').value;
         const pass = document.getElementById('new-pass').value;
-        const phone = document.getElementById('new-phone').value; // Nuevo campo
+        const phone = document.getElementById('new-phone').value; 
 
-        if(adminPass !== "ESTADIS2026") { alert("⛔ Contraseña maestra incorrecta."); return; }
+        if(adminPass !== "CEGIC_2026") { alert("⛔ Contraseña maestra incorrecta."); return; }
 
         if(nombre && pass && phone) {
             consejos.push({nombre: nombre, pass: pass, phone: phone});
@@ -336,7 +333,6 @@
         }
     }
 
-    // --- GUARDAR ---
     function guardarDatos(e) {
         e.preventDefault();
         const form = new FormData(e.target);
@@ -371,7 +367,6 @@
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         }).then(() => {
-            // Marcamos como enviado
             const index = historial.findIndex(h => h.id === data.id);
             if(index !== -1) { 
                 historial[index].enviado = true; 
@@ -379,7 +374,6 @@
             }
             if(document.getElementById('form-datos')) document.getElementById('form-datos').reset();
             
-            // IMPORTANTE: Al enviar, sincronizamos completo para reflejar cambios
             descargarDatosNube();
         }).catch(e => {
             console.error(e);
@@ -395,7 +389,6 @@
         });
     }
 
-    // --- SINCRONIZACIÓN ESPEJO (Borra locales si no están en nube) ---
     function descargarDatosNube() {
         if(!navigator.onLine || !consejoActivo) return;
 
@@ -405,22 +398,15 @@
         .then(response => response.json())
         .then(datosNube => {
             if(datosNube) {
-                // 1. Filtramos los datos de OTROS consejos (esos no se tocan)
                 let otrosConsejos = historial.filter(h => h.consejo !== consejoActivo);
-                
-                // 2. Filtramos los datos LOCALES NUEVOS que aún NO se han enviado a la nube (esos se guardan)
                 let localesPendientes = historial.filter(h => h.consejo === consejoActivo && !h.enviado);
 
-                // 3. Preparamos los datos de la nube
                 datosNube.forEach(d => {
                     d.consejo = consejoActivo;
                     d.enviado = true;
-                    // Generamos un ID si no trae, para estabilidad de la tabla
                     d.id = d.id || (d.nombreIglesia + d.totalMiembros); 
                 });
 
-                // 4. REEMPLAZO TOTAL: El nuevo historial es: 
-                // [Otros consejos] + [Lo que diga la Nube (La Verdad)] + [Lo que tengo pendiente de subir]
                 historial = [...otrosConsejos, ...datosNube, ...localesPendientes];
                 
                 localStorage.setItem('historial_v6', JSON.stringify(historial));
@@ -431,7 +417,6 @@
         .catch(e => console.error("Error sync:", e));
     }
 
-    // --- TABLA ---
     function renderTabla() {
         const tbody = document.querySelector('#tabla-registros tbody');
         const tfoot = document.getElementById('fila-totales');
@@ -498,7 +483,6 @@
         `;
     }
 
-    // --- AUTO SYNC ---
     function checkInternet() {
         const bar = document.getElementById('status-bar');
         if (navigator.onLine) {
@@ -538,7 +522,7 @@
                 sincronizar();
             } else {
                 checkInternet();
-                descargarDatosNube(); // Actualizar final
+                descargarDatosNube();
             }
         }).catch(e => console.log("Reintentando..."));
     }
@@ -548,5 +532,4 @@
 
 </script>
 </body>
-
 </html>
