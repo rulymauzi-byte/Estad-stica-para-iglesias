@@ -234,7 +234,7 @@
 <script>
     // --- CONFIGURACIÓN ---
     // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT
-    const API_URL = "https://script.google.com/macros/s/TU_URL_AQUI_XXXXX/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzL3BNCa3X-3bMTrST9ej6djGtfUYKQA9878c3P8JrCsIsD_Axp1UCFcOOe-IL9vob3Vw/exec";
 
     // DATOS INICIALES
     let consejos = JSON.parse(localStorage.getItem('consejos_v6')) || [
@@ -297,7 +297,7 @@
 
     function verContrasenas() {
         let master = prompt("Ingrese la Contraseña Maestra:");
-        if (master === "CEGIC_2026") {
+        if (master === "Raulmartin12") {
             let mensaje = "CONSEJOS REGISTRADOS:\n\n";
             consejos.forEach(c => {
                 mensaje += `🏛️ ${c.nombre}\n🔑 Clave: ${c.pass}\n📞 Encargado: ${c.phone || 'N/A'}\n\n`;
