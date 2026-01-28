@@ -5,89 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Estadístico CEGIC</title>
     <style>
-        :root {
-            --primary: #2c3e50;
-            --accent: #27ae60;
-            --light: #ecf0f1;
-            --border: #bdc3c7;
-        }
+        :root { --primary: #2c3e50; --accent: #27ae60; --light: #ecf0f1; --border: #bdc3c7; --danger: #e74c3c; }
         body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 15px; }
-        
         .container { max-width: 98%; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; }
         
-        /* MARCA DE AGUA RAMAUZI */
-        .marca-ramauzi {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-family: 'Brush Script MT', 'Cursive', cursive;
-            font-size: 0.9rem;
-            color: #bdc3c7;
-            pointer-events: none;
-        }
-
-        /* CONTACTO HEADER */
-        .contacto-box {
-            background-color: #eaf2f8;
-            border: 1px solid #d6eaf8;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .contacto-titulo { font-size: 0.85rem; color: #555; margin-bottom: 5px; }
-        .contacto-numero { font-size: 1.1rem; font-weight: bold; color: #2980b9; text-decoration: none; display: block; margin-bottom: 2px;}
-        .contacto-nombre { font-size: 0.75rem; color: #7f8c8d; font-style: italic; }
-
-        /* BOTONES MENU */
-        .btn-consejo {
-            width: 100%; padding: 20px; margin-bottom: 15px;
-            background: #ffffff; border-left: 10px solid var(--accent);
-            border-top: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;
-            font-size: 1.2rem; text-align: left; cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.3s;
-        }
-        .btn-consejo:hover { transform: translateX(5px); background: #f9fff9; }
+        .marca-ramauzi { position: absolute; top: 10px; right: 15px; font-family: 'Brush Script MT', 'Cursive', cursive; font-size: 0.9rem; color: #bdc3c7; pointer-events: none; }
         
+        /* BOTONES */
+        .btn-consejo { width: 100%; padding: 20px; margin-bottom: 15px; background: #ffffff; border-left: 10px solid var(--accent); border-top: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee; font-size: 1.2rem; text-align: left; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.3s; }
+        .btn-consejo:hover { transform: translateX(5px); background: #f9fff9; }
         .btn-crear { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: bold; font-size: 1rem;}
         .btn-ver-pass { background: #95a5a6; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 0.8rem;}
+        .btn-eliminar { background: var(--danger); color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.7rem; }
 
-        /* FORMULARIOS */
+        .contacto-box { background-color: #eaf2f8; border: 1px solid #d6eaf8; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 20px; }
+        .contacto-numero { font-size: 1.1rem; font-weight: bold; color: #2980b9; text-decoration: none; display: block;}
+
         #pantalla-formulario { display: none; }
         .seccion-titulo { background: #e8f5e9; padding: 10px; margin: 25px 0 15px 0; font-weight: bold; color: var(--accent); border-bottom: 2px solid var(--accent); text-transform: uppercase; letter-spacing: 1px; }
-        
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
-
-        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.85rem; color: #555; }
         
+        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.85rem; color: #555; }
         input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
-        input:focus, textarea:focus { border-color: var(--accent); outline: none; }
-        ::placeholder { color: #aaa; font-style: italic; }
-
-        /* BOTONES ACCIÓN */
+        
         .btn-enviar { background: var(--accent); color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-size: 1.1rem; cursor: pointer; margin-top: 20px; font-weight: bold;}
         .btn-volver { background: #7f8c8d; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 15px; font-size: 0.9rem;}
         
-        /* TABLA */
         .contenedor-tabla { margin-top: 40px; overflow-x: auto; border-top: 5px solid var(--primary); padding-top: 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.7rem; min-width: 2200px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.7rem; min-width: 2600px; }
         th { background-color: #90ee90; border: 1px solid #333; padding: 8px; color: black; text-transform: uppercase; position: sticky; top: 0; z-index: 2;}
         td { border: 1px solid #999; padding: 6px; text-align: center; color: #333; vertical-align: top;}
         tr:nth-child(even) { background-color: #f8f9fa; }
-        .link-tel { color: #2980b9; text-decoration: none; font-weight: bold; }
-        
         tfoot tr { background-color: #e0e0e0; color: black; font-weight: bold; border-top: 2px solid black;}
-        tfoot td { border: 1px solid #666; padding: 10px 5px; font-size: 0.85rem;}
 
-        /* MODAL Y STATUS */
         #modal-nuevo { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 100;}
         .modal-content { background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 400px; text-align: center; }
-        
         .status-bar { padding: 10px; text-align: center; color: white; font-weight: bold; margin-bottom: 15px; border-radius: 4px; display: none; }
-        .offline { background: #e67e22; }
-        .sync-active { background: #27ae60; }
-
+        .mensaje-carga { text-align: center; color: #555; font-style: italic; margin-bottom: 15px; display: none;}
     </style>
 </head>
 <body>
@@ -100,11 +55,12 @@
         <h1 style="text-align: center; color: var(--primary); margin-top: 25px;">Estadísticas Regionales CEGIC</h1>
         
         <div class="contacto-box">
-            <div class="contacto-titulo">¿Tienes dudas de cómo manejar el sistema? Llámanos:</div>
+            <div style="font-size:0.8rem">¿Tienes dudas de cómo manejar el sistema? Llámanos:</div>
             <a href="tel:55258033" class="contacto-numero">📞 5525-8033</a>
-            <div class="contacto-nombre">Pastor Raúl Martín</div>
+            <div style="font-size:0.7rem; color:#777">Pastor Raúl Martín</div>
         </div>
 
+        <div id="loading" class="mensaje-carga">🔄 Sincronizando sistema...</div>
         <div id="lista-botones"></div>
         
         <button class="btn-crear" onclick="mostrarModal()">+ Agregar Nuevo Consejo Regional</button>
@@ -118,48 +74,32 @@
         </div>
         
         <h2 id="titulo-consejo" style="margin-top:0;">Formulario</h2>
-        
         <div class="contacto-box" style="background-color:#fff8e1; border-color:#ffe0b2;">
-            <div class="contacto-titulo">Si tienes dudas sobre el formulario, llama al encargado:</div>
+            <div style="font-size:0.8rem">Si tienes dudas sobre el formulario, llama al encargado:</div>
             <a href="#" id="link-encargado" class="contacto-numero">Cargando...</a>
-            <div class="contacto-nombre">Encargado del Consejo</div>
+            <div style="font-size:0.7rem; color:#777">Encargado del Consejo</div>
         </div>
 
         <form id="form-datos" onsubmit="guardarDatos(event)">
-            
             <div class="seccion-titulo">1. Datos Generales</div>
             <div class="grid-2">
                 <div><label>Nombre Iglesia:</label><input type="text" name="nombreIglesia" required></div>
                 <div><label>Dirección:</label><input type="text" name="direccion"></div>
                 <div><label>Correo Electrónico:</label><input type="email" name="email"></div>
-                <div>
-                    <label>Teléfono / Celular:</label>
-                    <input type="tel" name="telefono" 
-                           placeholder="502 Pastor o Presidente" 
-                           oninput="this.value = this.value.replace(/[^0-9+ ]/g, '')">
-                </div>
+                <div><label>Teléfono / Celular:</label><input type="tel" name="telefono" placeholder="502 Pastor o Presidente"></div>
             </div>
 
             <div class="seccion-titulo">2. Membresía</div>
             <div class="grid-2">
-                <div style="background: #e8f8f5; padding:5px; border-radius:4px; border:1px dashed var(--accent);">
-                    <label style="color:var(--accent)">★ ¿Cuántos convertidos este año?</label>
-                    <input type="number" name="convertidos" placeholder="0">
-                </div>
+                <div style="background: #e8f8f5; padding:5px; border-radius:4px; border:1px dashed var(--accent);"><label style="color:var(--accent)">★ ¿Cuántos convertidos este año?</label><input type="number" name="convertidos" placeholder="0"></div>
                 <div><label>Miembros Bautizados:</label><input type="number" name="bautizados" placeholder="0"></div>
                 <div><label>No Bautizados:</label><input type="number" name="noBautizados" placeholder="0"></div>
-                <div><label>Total Miembros (Incl. congregaciones):</label><input type="number" name="totalMiembros" placeholder="0"></div>
+                <div><label>Total Miembros:</label><input type="number" name="totalMiembros" placeholder="0"></div>
             </div>
             
             <div class="grid-2" style="margin-top:10px">
-                <div>
-                    <label>Nombre de todas sus congregaciones:</label>
-                    <textarea name="congregaciones" rows="4" placeholder="Escriba una por línea..."></textarea>
-                </div>
-                <div>
-                    <label>Campos Blancos / Casas visita:</label>
-                    <textarea name="camposBlancos" rows="4" placeholder="Escriba una por línea..."></textarea>
-                </div>
+                <div><label>Nombre de congregaciones:</label><textarea name="congregaciones" rows="3"></textarea></div>
+                <div><label>Campos Blancos:</label><textarea name="camposBlancos" rows="3"></textarea></div>
             </div>
 
             <div class="seccion-titulo">3. Oficiales</div>
@@ -171,20 +111,20 @@
 
             <div class="seccion-titulo">4. Por Edades y Género</div>
             <div class="grid-2">
-                <div><label>Niños (1-11 años):</label><input type="number" name="ninos" placeholder="0"></div>
-                <div><label>Adolescentes (12-17 años):</label><input type="number" name="adolescentes" placeholder="0"></div>
-                <div><label>Jóvenes Solteros (18-30 años):</label><input type="number" name="jovenes" placeholder="0"></div>
-                <div><label>Hombres en total:</label><input type="number" name="hombres" placeholder="0"></div>
-                <div><label>Mujeres en total:</label><input type="number" name="mujeres" placeholder="0"></div>
+                <div><label>Niños (1-11):</label><input type="number" name="ninos" placeholder="0"></div>
+                <div><label>Adolescentes (12-17):</label><input type="number" name="adolescentes" placeholder="0"></div>
+                <div><label>Jóvenes (18-30):</label><input type="number" name="jovenes" placeholder="0"></div>
+                <div><label>Hombres:</label><input type="number" name="hombres" placeholder="0"></div>
+                <div><label>Mujeres:</label><input type="number" name="mujeres" placeholder="0"></div>
             </div>
 
             <div class="seccion-titulo">5. Ministerios y Medios</div>
             <div class="grid-2">
-                <div><label>Tiene Soc. de Jóvenes</label><select name="socJovenes"><option>Si</option><option>No</option></select></div>
-                <div><label>Tiene Soc. de Damas</label><select name="socDamas"><option>Si</option><option>No</option></select></div>
-                <div><label>Tiene Soc. de Caballeros</label><select name="socCaballeros"><option>Si</option><option>No</option></select></div>
-                <div><label>Tiene Ministerio Infantil</label><select name="minInfantil"><option>Si</option><option>No</option></select></div>
-                <div><label>MEDIOS (Si tiene TV o Radio):</label><input type="text" name="medios" placeholder="Especifique"></div>
+                <div><label>Soc. Jóvenes</label><select name="socJovenes"><option>Si</option><option>No</option></select></div>
+                <div><label>Soc. Damas</label><select name="socDamas"><option>Si</option><option>No</option></select></div>
+                <div><label>Soc. Caballeros</label><select name="socCaballeros"><option>Si</option><option>No</option></select></div>
+                <div><label>Min. Infantil</label><select name="minInfantil"><option>Si</option><option>No</option></select></div>
+                <div><label>MEDIOS:</label><input type="text" name="medios" placeholder="TV, Radio, etc"></div>
             </div>
 
             <button type="submit" class="btn-enviar" id="btn-submit">GUARDAR REPORTE</button>
@@ -192,17 +132,19 @@
 
         <div class="contenedor-tabla">
             <h3 style="text-align:center;">Reporte Global: <span id="nombre-tabla-local"></span></h3>
-            <p style="text-align:center; font-size:0.8rem;">Deslice para ver todo. Toque el número para llamar.</p>
+            <button onclick="descargarDatosNube()" style="width:100%; padding:10px; background:#3498db; color:white; border:none; margin-bottom:10px; cursor:pointer; font-weight:bold; border-radius:5px;">🔄 Sincronizar / Actualizar Tabla</button>
+            
             <table id="tabla-registros">
                 <thead>
                     <tr>
+                        <th style="background:#e74c3c; color:white;">Acción</th>
                         <th>Iglesia</th><th>Dirección</th><th>Email</th><th>Teléfono</th>
-                        <th>Convertidos</th><th>Bautizados</th><th>No Baut.</th><th>TOTAL MIEM.</th>
+                        <th>Conv.</th><th>Baut.</th><th>No Baut.</th><th>TOTAL</th>
                         <th>Congregaciones</th><th>C. Blancos</th>
-                        <th>Ancianos</th><th>Diáconos</th><th>Diaconisas</th>
-                        <th>Niños</th><th>Adolesc.</th><th>Jóvenes</th><th>Hombres</th><th>Mujeres</th>
-                        <th>S.Jóv</th><th>S.Dama</th><th>S.Cab</th><th>M.Inf</th>
-                        <th>MEDIOS</th><th>Estado</th>
+                        <th>Anc.</th><th>Diác.</th><th>Diaconisas</th>
+                        <th>Niños</th><th>Adol.</th><th>Jóv.</th><th>Hom.</th><th>Muj.</th>
+                        <th>S.J</th><th>S.D</th><th>S.C</th><th>M.I</th>
+                        <th>Medios</th><th>Estado</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -214,42 +156,36 @@
 
 <div id="modal-nuevo">
     <div class="modal-content">
-        <h3 style="color:var(--primary)">Nuevo Consejo Regional</h3>
-        
-        <label style="text-align:left">Clave Maestra:</label>
-        <input type="password" id="admin-pass" placeholder="Ingrese Clave Maestra" style="margin-bottom:15px; border-color: red;">
-        
-        <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
-        <label style="text-align:left">Nombre Consejo:</label>
-        <input type="text" id="new-name" placeholder="Ej. Zona Sur" style="margin-bottom:10px">
-        <label style="text-align:left">Número del Encargado (Para dudas):</label>
-        <input type="tel" id="new-phone" placeholder="Ej. 5555-5555" style="margin-bottom:10px">
-        <label style="text-align:left">Crear Contraseña:</label>
-        <input type="password" id="new-pass" placeholder="Contraseña de acceso">
+        <h3>Nuevo Consejo Regional</h3>
+        <input type="password" id="admin-pass" placeholder="Clave Maestra de Creación" style="margin-bottom:15px; border: 2px solid red;">
+        <input type="text" id="new-name" placeholder="Nombre del Consejo" style="margin-bottom:10px;">
+        <input type="tel" id="new-phone" placeholder="Teléfono Encargado" style="margin-bottom:10px;">
+        <input type="password" id="new-pass" placeholder="Crear Contraseña para este Consejo" style="margin-bottom:10px;">
         <button class="btn-enviar" onclick="crearConsejo()">Crear</button>
-        <button class="btn-volver" onclick="cerrarModal()" style="margin-top:10px; width:100%">Cancelar</button>
+        <button class="btn-volver" onclick="cerrarModal()" style="width:100%; margin-top:10px;">Cancelar</button>
     </div>
 </div>
 
 <script>
-    // --- CONFIGURACIÓN ---
-    // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT
-    const API_URL = "https://script.google.com/macros/s/AKfycbzL3BNCa3X-3bMTrST9ej6djGtfUYKQA9878c3P8JrCsIsD_Axp1UCFcOOe-IL9vob3Vw/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbx7JynZc12TrLiF6uNqprnEsw88BkDwRn655BF0TU5WiYUrr4mcD_2eHt1NwLr6vNYs/exec"; 
 
-    // DATOS INICIALES
-    let consejos = JSON.parse(localStorage.getItem('consejos_v6')) || [
-        { nombre: "Consejo Regional Akateko", pass: "cerak1", phone: "45139701" }
-    ];
-
+    let consejos = []; 
     let consejoActivo = null;
-    let consejoActivoObj = null; 
-    let cola = JSON.parse(localStorage.getItem('cola_envios_v6')) || [];
-    let historial = JSON.parse(localStorage.getItem('historial_v6')) || [];
+    let cola = JSON.parse(localStorage.getItem('cola_v12')) || [];
+    let historial = JSON.parse(localStorage.getItem('historial_v12')) || [];
 
     document.addEventListener("DOMContentLoaded", () => {
-        renderBotones();
         checkInternet();
+        cargarListaConsejos();
     });
+
+    function cargarListaConsejos() {
+        document.getElementById('loading').style.display = 'block';
+        fetch(API_URL + "?accion=LEER_CONSEJOS&t=" + Date.now())
+        .then(r => r.json()).then(data => { if(Array.isArray(data)) { consejos = data; renderBotones(); } })
+        .catch(e => { console.error(e); renderBotones(); })
+        .finally(() => { document.getElementById('loading').style.display = 'none'; });
+    }
 
     function renderBotones() {
         const div = document.getElementById('lista-botones');
@@ -258,278 +194,155 @@
             let btn = document.createElement('button');
             btn.className = "btn-consejo";
             btn.innerHTML = `🏛️ <b>${c.nombre}</b>`;
-            btn.onclick = () => login(c.nombre, c.pass);
+            btn.onclick = () => login(c.nombre, c.pass, c.phone);
             div.appendChild(btn);
         });
     }
 
-    function login(nombre, passReal) {
-        let input = prompt(`Ingrese contraseña para: ${nombre}`);
+    function login(nombre, passReal, phone) {
+        let input = prompt(`Contraseña para: ${nombre}`);
         if (input === passReal) {
             consejoActivo = nombre;
-            consejoActivoObj = consejos.find(c => c.nombre === nombre);
-            
             document.getElementById('pantalla-inicio').style.display = 'none';
             document.getElementById('pantalla-formulario').style.display = 'block';
             document.getElementById('titulo-consejo').innerText = nombre;
             document.getElementById('nombre-tabla-local').innerText = nombre;
-            
             const linkTel = document.getElementById('link-encargado');
-            let phoneNum = consejoActivoObj.phone || "Sin número";
-            linkTel.innerText = `📞 ${phoneNum}`;
-            linkTel.href = `tel:${phoneNum}`;
-
+            linkTel.innerText = `📞 ${phone || 'S/N'}`; linkTel.href = `tel:${phone}`;
             window.scrollTo(0,0);
-            
             descargarDatosNube();
-            renderTabla(); 
-        } else {
-            alert("Contraseña incorrecta");
-        }
-    }
-
-    function volver() {
-        document.getElementById('pantalla-formulario').style.display = 'none';
-        document.getElementById('pantalla-inicio').style.display = 'block';
-        document.getElementById('form-datos').reset();
-        consejoActivo = null;
-    }
-
-    function verContrasenas() {
-        let master = prompt("Ingrese la Contraseña Maestra:");
-        if (master === "Raulmartin12") {
-            let mensaje = "CONSEJOS REGISTRADOS:\n\n";
-            consejos.forEach(c => {
-                mensaje += `🏛️ ${c.nombre}\n🔑 Clave: ${c.pass}\n📞 Encargado: ${c.phone || 'N/A'}\n\n`;
-            });
-            alert(mensaje);
-        } else {
-            alert("Acceso denegado.");
-        }
-    }
-
-    function mostrarModal() { 
-        document.getElementById('modal-nuevo').style.display = 'flex'; 
-        document.getElementById('admin-pass').value = ""; 
-    }
-    function cerrarModal() { document.getElementById('modal-nuevo').style.display = 'none'; }
-
-    function crearConsejo() {
-        const adminPass = document.getElementById('admin-pass').value;
-        const nombre = document.getElementById('new-name').value;
-        const pass = document.getElementById('new-pass').value;
-        const phone = document.getElementById('new-phone').value; 
-
-        if(adminPass !== "CEGIC_2026") { alert("⛔ Contraseña maestra incorrecta."); return; }
-
-        if(nombre && pass && phone) {
-            consejos.push({nombre: nombre, pass: pass, phone: phone});
-            localStorage.setItem('consejos_v6', JSON.stringify(consejos));
-            renderBotones();
-            cerrarModal();
-            alert("Consejo creado exitosamente.");
-        } else {
-            alert("Por favor llene todos los campos, incluido el teléfono del encargado.");
-        }
+        } else if(input !== null) { alert("Incorrecta"); }
     }
 
     function guardarDatos(e) {
         e.preventDefault();
         const form = new FormData(e.target);
         const data = Object.fromEntries(form.entries());
+        data.consejo = consejoActivo; data.id = Date.now(); data.enviado = false;
         
-        data.consejo = consejoActivo; 
-        data.id = Date.now();
-        data.enviado = false;
-
         historial.push(data);
-        localStorage.setItem('historial_v6', JSON.stringify(historial));
-
+        localStorage.setItem('historial_v12', JSON.stringify(historial));
+        
         if(navigator.onLine) {
             enviarNube(data);
         } else {
             cola.push(data);
-            localStorage.setItem('cola_envios_v6', JSON.stringify(cola));
+            localStorage.setItem('cola_v12', JSON.stringify(cola));
             checkInternet();
-            alert("Guardado OFFLINE. Se subirá automáticamente cuando haya internet.");
             renderTabla();
-            document.getElementById('form-datos').reset();
+            e.target.reset();
+            alert("Guardado Offline");
         }
     }
 
     function enviarNube(data) {
         const btn = document.getElementById('btn-submit');
-        btn.textContent = "Subiendo...";
-        btn.disabled = true;
-
-        fetch(API_URL, {
-            method: 'POST', mode: 'no-cors',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        }).then(() => {
-            const index = historial.findIndex(h => h.id === data.id);
-            if(index !== -1) { 
-                historial[index].enviado = true; 
-                localStorage.setItem('historial_v6', JSON.stringify(historial));
-            }
-            if(document.getElementById('form-datos')) document.getElementById('form-datos').reset();
-            
+        btn.textContent = "Enviando..."; btn.disabled = true;
+        fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) })
+        .then(() => {
+            let item = historial.find(h => h.id === data.id);
+            if(item) item.enviado = true;
+            localStorage.setItem('historial_v12', JSON.stringify(historial));
+            document.getElementById('form-datos').reset();
             descargarDatosNube();
-        }).catch(e => {
-            console.error(e);
-            cola.push(data);
-            localStorage.setItem('cola_envios_v6', JSON.stringify(cola));
-        }).finally(() => {
-            if(document.getElementById('btn-submit')) {
-                document.getElementById('btn-submit').textContent = "GUARDAR REPORTE";
-                document.getElementById('btn-submit').disabled = false;
+        })
+        .finally(() => { btn.textContent = "GUARDAR REPORTE"; btn.disabled = false; renderTabla(); });
+    }
+
+    function eliminarDato(idRegistro, nombreIglesia) {
+        let pass = prompt(`Para eliminar "${nombreIglesia}", ingrese la clave de administrador:`);
+        if (pass === "admin_2026") {
+            if (confirm("¿Eliminar registro permanentemente?")) {
+                // Borrar Local
+                historial = historial.filter(h => h.id !== idRegistro && h.nombreIglesia !== nombreIglesia);
+                localStorage.setItem('historial_v12', JSON.stringify(historial));
+                
+                // Borrar Nube
+                const payload = { accion: "ELIMINAR_REGISTRO", consejo: consejoActivo, nombreIglesia: nombreIglesia };
+                fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
+                .then(() => {
+                    alert("Eliminado con éxito");
+                    descargarDatosNube();
+                });
             }
-            renderTabla();
-            checkInternet();
-        });
+        } else if (pass !== null) { alert("Clave Incorrecta"); }
     }
 
     function descargarDatosNube() {
-        if(!navigator.onLine || !consejoActivo) return;
-
-        const urlConParams = API_URL + "?consejo=" + encodeURIComponent(consejoActivo);
-
-        fetch(urlConParams)
-        .then(response => response.json())
-        .then(datosNube => {
-            if(datosNube) {
-                let otrosConsejos = historial.filter(h => h.consejo !== consejoActivo);
-                let localesPendientes = historial.filter(h => h.consejo === consejoActivo && !h.enviado);
-
-                datosNube.forEach(d => {
-                    d.consejo = consejoActivo;
-                    d.enviado = true;
-                    d.id = d.id || (d.nombreIglesia + d.totalMiembros); 
-                });
-
-                historial = [...otrosConsejos, ...datosNube, ...localesPendientes];
-                
-                localStorage.setItem('historial_v6', JSON.stringify(historial));
+        fetch(API_URL + "?consejo=" + encodeURIComponent(consejoActivo) + "&t=" + Date.now())
+        .then(r=>r.json()).then(data => {
+            if(Array.isArray(data)) {
+                let otros = historial.filter(h => h.consejo !== consejoActivo);
+                data.forEach(d => { d.consejo = consejoActivo; d.enviado = true; d.id = d.id || d.nombreIglesia; });
+                historial = [...otros, ...data];
+                localStorage.setItem('historial_v12', JSON.stringify(historial));
                 renderTabla();
-                console.log("Sincronización espejo completada.");
             }
-        })
-        .catch(e => console.error("Error sync:", e));
+        });
     }
 
     function renderTabla() {
         const tbody = document.querySelector('#tabla-registros tbody');
-        const tfoot = document.getElementById('fila-totales');
         tbody.innerHTML = "";
-        
-        const datos = historial.filter(h => h.consejo === consejoActivo);
-        
-        let sum = { conv:0, baut:0, noBaut:0, total:0, anc:0, diac:0, diaconisa:0, ninos:0, adol:0, jov:0, hom:0, muj:0 };
+        const data = historial.filter(h => h.consejo === consejoActivo);
+        let s = { conv:0, baut:0, noBaut:0, tot:0, anc:0, diac:0, diaconisa:0, nin:0, adol:0, jov:0, hom:0, muj:0 };
 
-        datos.forEach(d => {
-            sum.conv += Number(d.convertidos)||0;
-            sum.baut += Number(d.bautizados)||0;
-            sum.noBaut += Number(d.noBautizados)||0;
-            sum.total += Number(d.totalMiembros)||0;
-            sum.anc += Number(d.ancianos)||0;
-            sum.diac += Number(d.diaconos)||0;
-            sum.diaconisa += Number(d.diaconisas)||0;
-            sum.ninos += Number(d.ninos)||0;
-            sum.adol += Number(d.adolescentes)||0;
-            sum.jov += Number(d.jovenes)||0;
-            sum.hom += Number(d.hombres)||0;
-            sum.muj += Number(d.mujeres)||0;
+        data.forEach(d => {
+            s.conv += Number(d.convertidos)||0; s.baut += Number(d.bautizados)||0; s.noBaut += Number(d.noBautizados)||0; s.tot += Number(d.totalMiembros)||0;
+            s.anc += Number(d.ancianos)||0; s.diac += Number(d.diaconos)||0; s.diaconisa += Number(d.diaconisas)||0;
+            s.nin += Number(d.ninos)||0; s.adol += Number(d.adolescentes)||0; s.jov += Number(d.jovenes)||0; s.hom += Number(d.hombres)||0; s.muj += Number(d.mujeres)||0;
 
-            let listaCong = (d.congregaciones || "").replace(/\n/g, "<br>");
-            let listaCampos = (d.camposBlancos || "").replace(/\n/g, "<br>");
-            let telDisplay = d.telefono ? `<a href="tel:${d.telefono}" class="link-tel">📞 ${d.telefono}</a>` : '-';
-
-            let row = `<tr>
-                <td style="font-weight:bold">${d.nombreIglesia}</td>
-                <td>${d.direccion || '-'}</td>
-                <td>${d.email || '-'}</td>
-                <td>${telDisplay}</td>
-                <td style="background:#e8f8f5">${d.convertidos || ''}</td>
-                <td>${d.bautizados || ''}</td>
-                <td>${d.noBautizados || ''}</td>
-                <td style="font-weight:bold">${d.totalMiembros || ''}</td>
-                <td style="text-align:left; font-size:0.6rem">${listaCong}</td>
-                <td style="text-align:left; font-size:0.6rem">${listaCampos}</td>
-                <td>${d.ancianos || ''}</td>
-                <td>${d.diaconos || ''}</td>
-                <td>${d.diaconisas || ''}</td>
-                <td>${d.ninos || ''}</td>
-                <td>${d.adolescentes || ''}</td>
-                <td>${d.jovenes || ''}</td>
-                <td>${d.hombres || ''}</td>
-                <td>${d.mujeres || ''}</td>
-                <td>${d.socJovenes}</td>
-                <td>${d.socDamas}</td>
-                <td>${d.socCaballeros}</td>
-                <td>${d.minInfantil}</td>
-                <td style="background:#fff3e0">${d.medios || '-'}</td>
-                <td style="color:${d.enviado?'green':'red'}; font-weight:bold">${d.enviado?'OK':'PEND'}</td>
+            tbody.innerHTML += `<tr>
+                <td><button class="btn-eliminar" onclick="eliminarDato('${d.id}', '${d.nombreIglesia}')">🗑️ Borrar</button></td>
+                <td style="font-weight:bold">${d.nombreIglesia}</td><td>${d.direccion||'-'}</td><td>${d.email||'-'}</td><td>${d.telefono||'-'}</td>
+                <td style="background:#e8f8f5">${d.convertidos||0}</td><td>${d.bautizados||0}</td><td>${d.noBautizados||0}</td><td style="font-weight:bold">${d.totalMiembros||0}</td>
+                <td>${d.congregaciones||'-'}</td><td>${d.camposBlancos||'-'}</td>
+                <td>${d.ancianos||0}</td><td>${d.diaconos||0}</td><td>${d.diaconisas||0}</td>
+                <td>${d.ninos||0}</td><td>${d.adolescentes||0}</td><td>${d.jovenes||0}</td><td>${d.hombres||0}</td><td>${d.mujeres||0}</td>
+                <td>${d.socJovenes||'-'}</td><td>${d.socDamas||'-'}</td><td>${d.socCaballeros||'-'}</td><td>${d.minInfantil||'-'}</td>
+                <td>${d.medios||'-'}</td>
+                <td style="color:${d.enviado?'green':'red'};font-weight:bold">${d.enviado?'OK':'PEND'}</td>
             </tr>`;
-            tbody.innerHTML += row;
         });
-
-        tfoot.innerHTML = `
-            <td>TOTALES</td><td>-</td><td>-</td><td>-</td>
-            <td>${sum.conv}</td><td>${sum.baut}</td><td>${sum.noBaut}</td><td>${sum.total}</td>
-            <td>-</td><td>-</td>
-            <td>${sum.anc}</td><td>${sum.diac}</td><td>${sum.diaconisa}</td>
-            <td>${sum.ninos}</td><td>${sum.adol}</td><td>${sum.jov}</td><td>${sum.hom}</td><td>${sum.muj}</td>
-            <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
-        `;
+        document.getElementById('fila-totales').innerHTML = `<td>TOTAL</td><td>-</td><td>-</td><td>-</td><td>-</td><td>${s.conv}</td><td>${s.baut}</td><td>${s.noBaut}</td><td>${s.tot}</td><td>-</td><td>-</td><td>${s.anc}</td><td>${s.diac}</td><td>${s.diaconisa}</td><td>${s.nin}</td><td>${s.adol}</td><td>${s.jov}</td><td>${s.hom}</td><td>${s.muj}</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>`;
     }
 
     function checkInternet() {
         const bar = document.getElementById('status-bar');
-        if (navigator.onLine) {
-            if (cola.length > 0) {
-                bar.style.display = 'block';
-                bar.className = 'status-bar sync-active';
-                bar.innerHTML = `🔄 Internet detectado. Subiendo ${cola.length} pendientes...`;
-                sincronizar(); 
-            } else {
-                bar.style.display = 'none';
-            }
+        if(navigator.onLine) {
+            bar.style.display='none';
+            if(cola.length > 0) sincronizar();
         } else {
-            bar.style.display = 'block';
-            bar.className = 'status-bar offline';
-            bar.innerHTML = `⚠️ SIN CONEXIÓN (${cola.length} pendientes)`;
+            bar.style.display='block'; bar.style.background='#e67e22'; bar.textContent="Modo Offline Activo";
         }
     }
 
     function sincronizar() {
         if(cola.length === 0) return;
-        const dato = cola[0];
-        fetch(API_URL, {
-            method: 'POST', mode: 'no-cors',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(dato)
-        }).then(() => {
-            cola.shift();
-            localStorage.setItem('cola_envios_v6', JSON.stringify(cola));
-            
-            let found = historial.find(h => h.id === dato.id);
-            if(found) found.enviado = true;
-            localStorage.setItem('historial_v6', JSON.stringify(historial));
-            
-            renderTabla();
-            
-            if(cola.length > 0) {
-                sincronizar();
-            } else {
-                checkInternet();
-                descargarDatosNube();
-            }
-        }).catch(e => console.log("Reintentando..."));
+        fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(cola[0]) })
+        .then(() => { cola.shift(); localStorage.setItem('cola_v12', JSON.stringify(cola)); sincronizar(); });
     }
 
+    function crearConsejo() {
+        const passMaster = document.getElementById('admin-pass').value;
+        if(passMaster !== "ESTADIS2026") { alert("Error Clave Maestra"); return; }
+        const payload = {
+            accion: "CREAR_CONSEJO_GLOBAL",
+            nombre: document.getElementById('new-name').value,
+            pass: document.getElementById('new-pass').value,
+            phone: document.getElementById('new-phone').value
+        };
+        fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
+        .then(() => { alert("Creado con éxito"); cerrarModal(); cargarListaConsejos(); });
+    }
+
+    function volver() { document.getElementById('pantalla-formulario').style.display='none'; document.getElementById('pantalla-inicio').style.display='block'; consejoActivo=null; }
+    function mostrarModal() { document.getElementById('modal-nuevo').style.display='flex'; }
+    function cerrarModal() { document.getElementById('modal-nuevo').style.display='none'; }
+    function verContrasenas() { if(prompt("Clave Maestra") === "Raulmartin12") { let m = ""; consejos.forEach(c => m += `${c.nombre}: ${c.pass}\n`); alert(m); } }
+    
     window.addEventListener('online', checkInternet);
     window.addEventListener('offline', checkInternet);
-
 </script>
 </body>
 </html>
