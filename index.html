@@ -285,6 +285,7 @@
             const resultados = await Promise.all(promesas);
             historialTotalGlobal = resultados.flat(); 
             calcularInformeGeneral();
+            if(consejoActivo) renderTabla();
         } catch(e) { console.error(e); }
         finally { document.getElementById('barra-proceso').style.display = 'none'; }
     }
@@ -378,18 +379,36 @@
         document.getElementById('inf-mujeres').innerText = t.muj;
     }
 
+    /* GUARDADO INMEDIATO EN LOCAL Y SUBIDA AUTOMÁTICA */
     function guardarDatos(e) {
         e.preventDefault();
         const tipo = document.getElementById('tipoEntidad').value;
         const mi = document.getElementById('minInfantil').value;
         if(!tipo || !mi) return alert("Debe seleccionar todas las opciones obligatorias.");
+        
         document.getElementById('barra-proceso').style.display = 'block';
+        
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
-        data.consejo = consejoActivo; data.anio = anioSeleccionado;
+        data.consejo = consejoActivo; 
+        data.anio = anioSeleccionado;
+        data.consejoSheet = consejoActivo; // Para informe global
+        data.enviado = false; // Estado temporal
+
+        // 1. Guardar en memoria local al instante
+        historialTotalGlobal.push(data);
+        renderTabla(); 
+        calcularInformeGeneral();
+        e.target.reset(); // Limpia formulario rápido
+
+        // 2. Subir a la nube en segundo plano
         fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) })
-        .then(() => { e.target.reset(); iniciarCargaSincronizada(); })
-        .finally(() => { document.getElementById('barra-proceso').style.display = 'none'; });
+        .then(() => { 
+            iniciarCargaSincronizada(); // Actualiza todo automáticamente al terminar
+        })
+        .finally(() => { 
+            document.getElementById('barra-proceso').style.display = 'none'; 
+        });
     }
 
     function renderTabla() {
@@ -397,12 +416,15 @@
         const tfoot = document.getElementById('fila-totales');
         tbody.innerHTML = "";
         let s = { conv:0, baut:0, noBaut:0, tot:0, anc:0, diac:0, diaconi:0, hom:0, muj:0, nin:0, adol:0, jov:0 };
+        
         const datosLocal = historialTotalGlobal.filter(h => h.consejoSheet === consejoActivo);
+        
         datosLocal.forEach(d => {
             s.conv += Number(d.convertidos)||0; s.baut += Number(d.bautizados)||0; s.noBaut += Number(d.noBautizados)||0; s.tot += Number(d.totalMiembros)||0;
             s.anc += Number(d.ancianos)||0; s.diac += Number(d.diaconos)||0; s.diaconi += Number(d.diaconisas)||0;
             s.hom += Number(d.hombres)||0; s.muj += Number(d.mujeres)||0;
             s.nin += Number(d.ninos)||0; s.adol += Number(d.adolescentes)||0; s.jov += Number(d.jovenes)||0;
+
             tbody.innerHTML += `<tr>
                 <td><button onclick="eliminarDato('${d.nombreIglesia}')" style="background:var(--danger);color:white;border:none;cursor:pointer;padding:5px;border-radius:4px;">🗑️</button></td>
                 <td>${d.tipoEntidad || '-'}</td><td><b>${d.nombreIglesia}</b></td><td>${d.direccion||'-'}</td><td>${d.telefono||'-'}</td>
@@ -411,7 +433,7 @@
                 <td>${d.ancianos||0}</td><td>${d.diaconos||0}</td><td>${d.diaconisas||0}</td><td>${d.hombres||0}</td><td>${d.mujeres||0}</td>
                 <td>${d.ninos||0}</td><td>${d.adolescentes||0}</td><td>${d.jovenes||0}</td>
                 <td>${d.socFemenil||'-'}</td><td>${d.socJuvenil||'-'}</td><td>${d.socCaballero||'-'}</td><td>${d.minInfantil||'-'}</td>
-                <td style="color:#27ae60">OK</td>
+                <td style="color:${d.enviado === false ? '#e67e22' : '#27ae60'}">${d.enviado === false ? '...' : 'OK'}</td>
             </tr>`;
         });
         tfoot.innerHTML = `<td colspan="5">TOTALES ${anioSeleccionado}</td><td>${s.conv}</td><td>${s.baut}</td><td>${s.noBaut}</td><td>${s.tot}</td><td colspan="2">-</td><td>${s.anc}</td><td>${s.diac}</td><td>${s.diaconi}</td><td>${s.hom}</td><td>${s.muj}</td><td>${s.nin}</td><td>${s.adol}</td><td>${s.jov}</td><td colspan="5">-</td>`;
@@ -445,4 +467,3 @@
 </script>
 </body>
 </html>
-
